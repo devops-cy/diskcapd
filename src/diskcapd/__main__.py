@@ -1,0 +1,6 @@
+"""Run diskcapd with python -m diskcapd."""
+
+from .cli import entrypoint
+
+if __name__ == "__main__":
+    raise SystemExit(entrypoint())

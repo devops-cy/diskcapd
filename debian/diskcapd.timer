@@ -1,0 +1,11 @@
+[Unit]
+Description=Run diskcapd filesystem checks
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=30s
+Unit=diskcapd.service
+
+[Install]
+WantedBy=timers.target

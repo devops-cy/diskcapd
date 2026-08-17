@@ -1,0 +1,203 @@
+.TH DISKCAPD 1 "August 2026" "diskcapd 1.0.0" "User Commands"
+.SH NAME
+diskcapd \- monitor local filesystem capacity and availability
+.SH SYNOPSIS
+.B diskcapd
+.RI [ --version ]
+.RI { discover , setup , status , check , test-notification }
+.PP
+.B diskcapd discover
+.PP
+.B diskcapd setup
+.RI [ --config
+.IR PATH ]
+.PP
+.B diskcapd status
+.RI [ --config
+.IR PATH ]
+.PP
+.B diskcapd check
+.RI [ --config
+.IR PATH ]
+.RI [ --state
+.IR PATH ]
+.RI [ --quiet ]
+.PP
+.B diskcapd test-notification
+.B --to
+.I ADDRESS
+.SH DESCRIPTION
+.B diskcapd
+monitors mounted writable local block-backed filesystems for capacity,
+mount availability, and filesystem identity changes.
+.PP
+Configured filesystems are identified by mount point and filesystem UUID.
+This allows diskcapd to detect a missing mount or an unexpected filesystem
+mounted at a monitored location.
+.PP
+Network filesystems, pseudo filesystems, read-only mounts, swap, and other
+non-local filesystem types are not eligible for monitoring.
+.PP
+Notifications are delivered through the system Postout profile named
+.BR diskcapd .
+.SH COMMANDS
+.TP
+.B discover
+List mounted writable local block-backed filesystems that are eligible for
+monitoring.
+.TP
+.B setup
+Configure the filesystems to monitor, the Postout notification profile,
+and optional unattended monitoring.
+When using the default system configuration, setup can enable and start
+.BR diskcapd.timer
+after configuration is complete.
+The default configuration file is
+.BR /etc/diskcapd/diskcapd.conf .
+.TP
+.B status
+Show the current status of configured monitored filesystems without
+performing the normal monitoring transaction.
+.TP
+.B check
+Check configured filesystems, evaluate monitoring state, and process
+notifications for alerts, reminders, and recoveries.
+.TP
+.B test-notification
+Send a test notification through the configured system Postout profile.
+The recipient must be supplied with
+.BR --to .
+.SH OPTIONS
+.TP
+.BR -h ", " --help
+Show command help and exit.
+.TP
+.B --version
+Show the diskcapd version and exit.
+.TP
+.BI --config " PATH"
+Use an alternate configuration file.
+The default is
+.BR /etc/diskcapd/diskcapd.conf .
+.TP
+.BI --state " PATH"
+Use an alternate monitoring state file for
+.BR check .
+The default is
+.BR /var/lib/diskcapd/state.json .
+.TP
+.B --quiet
+Suppress steady-state output and show state transitions and errors only.
+This mode is suitable for unattended systemd execution.
+.TP
+.BI --to " ADDRESS"
+Send a test notification to the specified email address.
+.SH MONITORING MODEL
+For each configured filesystem, diskcapd checks that the expected mount is
+present, is backed by an eligible local block device, has the expected
+filesystem UUID, and remains within its configured capacity threshold.
+.PP
+A configured mount point is never silently replaced by information from a
+parent filesystem when the expected mount disappears.
+.PP
+Monitoring state is persisted between checks so that diskcapd can distinguish
+new violations, continuing violations, and recoveries.
+.SH NOTIFICATIONS
+diskcapd sends three kinds of monitoring notifications:
+.TP
+.B ALERT
+Sent when a filesystem enters a violation state or changes from one violation
+condition to another.
+.TP
+.B REMINDER
+Sent when a violation remains unresolved for 24 hours after the previous
+successful alert or reminder.
+.TP
+.B RECOVERY
+Sent when a previously violated filesystem returns to a healthy state.
+.PP
+Transitions detected during one check are aggregated into a single
+notification.
+.PP
+Monitoring state is committed only after required notification delivery
+succeeds. A notification failure therefore does not silently advance the
+recorded notification state.
+.SH FILES
+.TP
+.B /etc/diskcapd/diskcapd.conf
+System monitoring configuration.
+.TP
+.B /var/lib/diskcapd/state.json
+Persistent monitoring state.
+.TP
+.B /etc/postout/profiles.json
+System Postout profile configuration used for notification delivery.
+.SH EXIT STATUS
+.TP
+.B 0
+The command completed successfully. For
+.BR check ,
+no filesystem violation was present.
+.TP
+.B 1
+The check completed and one or more filesystem violations were present.
+.TP
+.B 2
+A configuration or operational error occurred.
+.TP
+.B 3
+Notification delivery failed.
+.SH SYSTEMD
+The Debian package installs:
+.TP
+.B diskcapd.service
+A oneshot service that runs
+.BR "diskcapd check --quiet" .
+.TP
+.B diskcapd.timer
+A systemd timer for periodic monitoring.
+.PP
+The timer is not started automatically on a fresh installation.
+After setup and validation, enable monitoring with:
+.PP
+.nf
+sudo systemctl enable --now diskcapd.timer
+.fi
+.SH EXAMPLES
+List eligible filesystems:
+.PP
+.nf
+diskcapd discover
+.fi
+.PP
+Configure diskcapd:
+.PP
+.nf
+sudo diskcapd setup
+.fi
+.PP
+Inspect monitoring status:
+.PP
+.nf
+sudo diskcapd status
+.fi
+.PP
+Run a scheduler-style check:
+.PP
+.nf
+sudo diskcapd check --quiet
+.fi
+.PP
+Test notification delivery:
+.PP
+.nf
+sudo diskcapd test-notification --to admin@example.com
+.fi
+.SH SEE ALSO
+.BR postout (1),
+.BR systemctl (1),
+.BR findmnt (8)
+.SH AUTHOR
+DEVOPS CY
+.SH LICENSE
+MIT License.

@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_test:
+	PYTHONPATH=src DISKCAPD_ANIMATION=0 python3 -m unittest discover -s tests -v
+
+override_dh_installsystemd:
+	dh_installsystemd --no-enable --no-start --no-stop-on-upgrade
+
+override_dh_builddeb:
+	dh_builddeb -- -Zxz

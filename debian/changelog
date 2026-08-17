@@ -1,0 +1,10 @@
+diskcapd (1.0.0-1) unstable; urgency=medium
+
+  * Initial public release.
+  * Monitor local block-backed filesystems by mountpoint and UUID.
+  * Detect capacity, missing-mount, and filesystem identity violations.
+  * Provide alert, reminder, and recovery notifications through Postout.
+  * Support optional unattended monitoring with systemd.
+  * Require Postout 1.0.0-5 or newer.
+
+ -- DEVOPS CY <info@devops.com.cy>  Mon, 17 Aug 2026 18:20:00 +0300

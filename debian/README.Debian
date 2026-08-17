@@ -1,0 +1,24 @@
+diskcapd for Debian
+===================
+
+Initial setup
+-------------
+
+Configure diskcapd for this machine:
+
+    sudo diskcapd setup
+
+Verify the configuration:
+
+    sudo diskcapd status
+
+Run one manual monitoring check:
+
+    sudo diskcapd check --quiet
+
+Enable automatic monitoring:
+
+    sudo systemctl enable --now diskcapd.timer
+
+The package deliberately does not enable or start automatic monitoring
+until machine-specific setup has been completed.

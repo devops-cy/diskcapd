@@ -1,0 +1,8 @@
+[Unit]
+Description=diskcapd local filesystem capacity monitor
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/diskcapd check --quiet
+SuccessExitStatus=1

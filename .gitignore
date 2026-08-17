@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Local diskcapd runtime files
+diskcapd.conf
+diskcapd-state.json
+
+# Debian build products
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/files
+debian/*.debhelper.log
+debian/*.postinst.debhelper
+debian/*.prerm.debhelper
+debian/*.substvars
+debian/diskcapd/
+
+# Editor leftovers
+*~
+*.swp

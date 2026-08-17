@@ -1,0 +1,25 @@
+Source: diskcapd
+Section: admin
+Priority: optional
+Maintainer: DEVOPS CY <info@devops.com.cy>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-python,
+ pybuild-plugin-pyproject,
+ python3-all,
+ python3-setuptools
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+
+Package: diskcapd
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ python3 (>= 3.9),
+ postout (>= 1.0.0-5)
+Description: Local filesystem capacity monitor
+ diskcapd monitors configured local block-backed filesystems for
+ capacity thresholds, mount failures and filesystem identity changes.
+ It provides stateful email alerts, reminders and recoveries through
+ Postout.
