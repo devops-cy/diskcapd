@@ -64,6 +64,10 @@ def fail(message: str) -> None:
     print(f"{RED}[FAIL]{RESET} {message}", file=sys.stderr)
 
 
+def cancelled(message: str = "Operation cancelled by user.") -> None:
+    print(f"{YELLOW}[CANCEL]{RESET} {message}", file=sys.stderr)
+
+
 def box_top() -> None:
     print(f"{CYAN}╭{'─' * UI_INNER_WIDTH}╮{RESET}")
 

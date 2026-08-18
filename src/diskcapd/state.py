@@ -280,7 +280,7 @@ def write_state(
         temporary_path.chmod(0o600)
         temporary_path.replace(path)
 
-    except Exception:
+    except BaseException:
         temporary_path.unlink(missing_ok=True)
         raise
 

@@ -54,6 +54,9 @@ This is the recommended installation method.
 Add the DEVOPS CY package repository:
 
 ```bash
+sudo apt update
+sudo apt install -y curl ca-certificates
+
 sudo install -d -m 0755 /etc/apt/keyrings
 
 curl -fsSL https://packages.devops.com.cy/devops-cy-archive-keyring.gpg \

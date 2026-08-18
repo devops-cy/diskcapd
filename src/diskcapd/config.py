@@ -75,7 +75,7 @@ def write_configuration(
         temporary_path.chmod(0o644)
         temporary_path.replace(path)
 
-    except Exception:
+    except BaseException:
         temporary_path.unlink(missing_ok=True)
         raise
 

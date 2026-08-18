@@ -1045,7 +1045,7 @@ For full documentation, see diskcapd(1).""",
     return parser
 
 
-def entrypoint(argv: Optional[list[str]] = None) -> int:
+def _entrypoint(argv: Optional[list[str]] = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
@@ -1076,3 +1076,14 @@ def entrypoint(argv: Optional[list[str]] = None) -> int:
 
     parser.error(f"Unknown command: {args.command}")
     return 2
+
+def entrypoint(argv: Optional[list[str]] = None) -> int:
+    """Run the CLI and handle interactive cancellation cleanly."""
+
+    try:
+        return _entrypoint(argv)
+    except KeyboardInterrupt:
+        print(file=sys.stderr)
+        ui.cancelled()
+        return 130
+
